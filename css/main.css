@@ -1,0 +1,20 @@
+p {
+    font-size: 20px;
+}
+
+div.wrapper {
+    margin:3% 10% 3% 10%;
+    width:80%;
+}
+
+img.center {
+    display:block;
+    margin:auto;
+}
+
+canvas.center {
+    padding: 0;
+    margin: auto;
+    display: block;
+    /*width: 600px;*/
+}
