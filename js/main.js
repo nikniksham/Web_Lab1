@@ -13,7 +13,7 @@ class Grid {
         this.raz = this.size_x / 60;
         this.need_cross = true;
         this.point_coords = [-this.raz, -this.raz, false];
-        this.scale = 7;
+        this.scale = 7; // кол-во ступеней в сетке
     }
 
     draw(x, y) {
@@ -131,6 +131,11 @@ class Grid {
         ctx.stroke();
     }
 
+    reset_cross() {
+        this.need_cross = true;
+        this.point_coords = [-this.raz, -this.raz, false]
+    }
+
     trans_coords(x, y) {
         return [this.size_x / 2 + x, this.size_y / 2 + y];
     }
@@ -165,13 +170,16 @@ canvas.onmousemove = function (evt) {
 }
 
 canvas.onclick = function (evt) {
-    // if (grid.need_cross) {
+    if (grid.need_cross) {
         var rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
         evt = evt || window.event;
         grid.need_cross = false;
-        grid.point_coords = [x, y, inPrimitive((x - grid.size_x/2) / grid.size_x*grid.scale/grid.r, -(y - grid.size_y/2) / grid.size_y*grid.scale/grid.r)];
+        let x_coords = (x - grid.size_x/2) / grid.size_x*grid.scale/grid.r, y_coords= -(y - grid.size_y/2) / grid.size_y*grid.scale/grid.r
+        document.getElementById("x_coords").value = x_coords;
+        document.getElementById("y_coords").value = y_coords;
+        grid.point_coords = [x, y, inPrimitive(x_coords, y_coords)];
         grid.draw(0, 0);
-    // }
+    }
 }
 
 canvas.onmouseleave = function (evt) {
@@ -179,5 +187,18 @@ canvas.onmouseleave = function (evt) {
     grid.draw(-10, -10);
 }
 
-let grid = new Grid(canvas.width, canvas.height, 3);
+function reset() {
+    grid.reset_cross();
+    grid.draw(-10, -10);
+}
+
+document.querySelector("select").addEventListener('change', function (e) {
+    // console.log("Changed to: " + e.target.value)
+    grid.r = parseFloat(e.target.value);
+    grid.reset_cross();
+    grid.draw(-10, -10);
+})
+
+
+let grid = new Grid(canvas.width, canvas.height, 3); // r - размер фигурки
 grid.draw(-10, -10);

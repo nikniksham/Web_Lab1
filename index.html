@@ -7,8 +7,34 @@
 </head>
 <body>
 <div class="wrapper">
-    <div class="container">
-        <canvas id="drawLine" width="800" height="800" class="center"></canvas>
+    <div class="grid">
+        <div class="container">
+            <canvas id="drawLine" width="600" height="600"></canvas>
+            <!--        <button class="base-button" type="button" onclick="reset()">Тык тык</button>-->
+        </div>
+        <div class="container">
+            <form action="" method="get">
+                <label for="size_r">Параметр R</label> <br>
+<!--                <input type="text" id="size_r" min="1" max="3" name="size_r"/> <br>-->
+                <select name="size_r" id="size_r">
+                    <option value="1">1</option>
+                    <option value="1.5">1.5</option>
+                    <option value="2">2</option>
+                    <option value="2.5">2.5</option>
+                    <option value="3" selected>3</option>
+                </select><br>
+
+                <label for="x_coords">X координата</label> <br>
+                <input type="text" id="x_coords" min="-3" max="5" name="x_coords"/> <br>
+
+                <label for="y_coords">Y координата</label> <br>
+                <input type="text" id="y_coords" min="-5" max="3" name="y_coords"/> <br>
+            </form>
+            <button class="btn" onclick="reset()">Задать координаты на карте</button>
+        </div>
+        <div class="container">
+
+        </div>
     </div>
 </div>
 <script src="js/main.js"></script>

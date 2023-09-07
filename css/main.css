@@ -1,10 +1,32 @@
-p {
-    font-size: 20px;
+body{
+    /*настраиваем шрифт*/
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/*общие настройки сетки*/
+.grid {
+    /*рисуем зелёные рамки*/
+    border: 1px solid #2f2f2f;
+    /*подключаем сетку*/
+    display: grid;
+    /*формируем по 4 одинаковых строки и столбца*/
+    /*grid-template-columns: repeat(3, 606px);*/
+    grid-template-columns: 606px 1.3fr 3fr;
+}
+
+/*внешний вид ячеек*/
+.grid > * {
+    /*фоновый цвет*/
+    background-color: #9b9b9b;
+    /*скругление углов*/
+    border-radius: 5px;
+    /*расстояние от одной границы ячейки до другой*/
+    margin: 3px;
 }
 
 div.wrapper {
-    margin:3% 10% 3% 10%;
-    width:80%;
+    margin: 2% 1% 2% 1%; /*Отступы: Сверху справа снизу слева*/
+    width:98%;
 }
 
 img.center {
@@ -12,9 +34,38 @@ img.center {
     margin:auto;
 }
 
-canvas.center {
-    padding: 0;
-    margin: auto;
-    display: block;
-    /*width: 600px;*/
+/*canvas.center {*/
+/*    padding: 0;*/
+/*    margin: auto;*/
+/*    display: block;*/
+/*    !*width: 600px;*!*/
+/*}*/
+
+.btn {
+    padding: 0 25px;
+    border: 1px solid rgba(162, 157, 157, 0.32);
+    border-radius: 5px;
+    line-height: 46px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    background-color: #ffffff;
+    /*box-shadow: 0 4px 6px rgb(65 132 144 / 10%), 0 1px 3px rgb(0 0 0 / 8%);*/
+     user-select: none;
+}
+
+.btn:hover {
+transition: all 0.2s;
+box-shadow: 0 7px 14px rgb(65 132 144 / 10%), 0 3px 6px rgb(0 0 0 / 8%);
+}
+
+.btn:active {
+background-color: #808080;
+}
+
+.btn:disabled {
+background-color: #eee;
+border-color: #eee;
+color: #444;
+cursor: not-allowed;
 }
