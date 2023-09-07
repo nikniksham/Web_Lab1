@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Моё красивое</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="grid">
+        <div>
+            <canvas id="drawLine" width="600" height="600"></canvas>
+            <!--        <button class="base-button" type="button" onclick="reset()">Тык тык</button>-->
+        </div>
+        <div class="container">
+            <p>Тут типо надо задавать координаты, где будет стоять точка, такая вот темка, ну типо можно ещё и задать
+                размер для фигурки, куда потом надо будет ставить точку, воот</p>
+            <form action="" method="get" class="my-form">
+                <div class="custom">
+                    <label for="size_r">Параметр R:</label>
+                    <select name="size_r" id="size_r" class="my-select">
+                        <option value="1">1</option>
+                        <option value="1.5">1.5</option>
+                        <option value="2">2</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3" selected>3</option>
+                    </select>
+                </div>
+
+                <div class="custom">
+                    <label for="x_coords">X координата:</label>
+                    <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input"/>
+                </div>
+
+                <div class="custom">
+                    <label for="y_coords">Y координата:</label>
+                    <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input"/>
+                </div>
+
+                <button class="btn" onclick="">Есть пробитие?</button>
+            </form>
+            <button class="btn" onclick="reset()">Задать координаты на карте</button>
+        </div>
+        <div class="container">
+            <div class="table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th colspan="1" style="width: 10%">X</th>
+                        <th colspan="1" style="width: 10%">Y</th>
+                        <th colspan="1" style="width: 5%">R</th>
+                        <th colspan="1" style="width: 25%">Результат</th>
+                        <th colspan="1" style="width: 30%">Выполнен в</th>
+                        <th colspan="1" style="width: 30%">Время выполнения</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+
+                    for ($i = 1; $i <= 100; $i++) {
+                        echo '<tr>';
+                        echo '<td><p class="crop">3.125123251251232525332322533232</p></td>';
+                        echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
+                        echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
+                        echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
+                        echo '<td><p class="crop">3.125123125123252533232252533232</p></td>';
+                        echo '<td><p class="crop">3.125123125123252533232252533232</p></td>';
+                        echo '</tr>';
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/main.js"></script>
+</body>
+</html>
+
