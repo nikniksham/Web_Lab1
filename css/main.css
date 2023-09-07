@@ -1,4 +1,4 @@
-body{
+body {
     /*настраиваем шрифт*/
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -22,16 +22,22 @@ body{
     border-radius: 5px;
     /*расстояние от одной границы ячейки до другой*/
     margin: 3px;
+
 }
 
 div.wrapper {
     margin: 2% 1% 2% 1%; /*Отступы: Сверху справа снизу слева*/
-    width:98%;
+    width: 98%;
 }
 
 img.center {
-    display:block;
-    margin:auto;
+    display: block;
+    margin: auto;
+}
+
+div.container {
+    padding: 3px 3px 3px 3px;
+    font-size: 18px;
 }
 
 /*canvas.center {*/
@@ -41,31 +47,43 @@ img.center {
 /*    !*width: 600px;*!*/
 /*}*/
 
+.form.my-form {
+    width: 100%;
+}
+
+.select.my-select {
+    min-width: 100%;
+}
+
+.input.my-input {
+    min-width: 100%;
+}
+
 .btn {
+    min-width: 100%;
     padding: 0 25px;
     border: 1px solid rgba(162, 157, 157, 0.32);
     border-radius: 5px;
-    line-height: 46px;
-    font-size: 14px;
-    font-weight: 600;
+    line-height: 30px;
+    font-size: 18px;
     color: #444;
     background-color: #ffffff;
     /*box-shadow: 0 4px 6px rgb(65 132 144 / 10%), 0 1px 3px rgb(0 0 0 / 8%);*/
-     user-select: none;
+    user-select: none;
 }
 
 .btn:hover {
-transition: all 0.2s;
-box-shadow: 0 7px 14px rgb(65 132 144 / 10%), 0 3px 6px rgb(0 0 0 / 8%);
+    transition: all 0.2s;
+    box-shadow: 0 7px 14px rgb(65 132 144 / 10%), 0 3px 6px rgb(0 0 0 / 8%);
 }
 
 .btn:active {
-background-color: #808080;
+    background-color: #808080;
 }
 
 .btn:disabled {
-background-color: #eee;
-border-color: #eee;
-color: #444;
-cursor: not-allowed;
+    background-color: #eee;
+    border-color: #eee;
+    color: #444;
+    cursor: not-allowed;
 }
