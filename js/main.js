@@ -154,10 +154,10 @@ class Grid {
     }
 }
 
-function inPrimitive(x, y) {
+function inPrimitive(x, y, r) {
     let res = false;
     // console.log(x, y);
-    if ((x <= 0 && y <= 0 && 0.25 - x**2 - y**2 >= 0) || (x <= 0 && y >= 0 && x >= -0.5 && y <= 1) || (x >= 0 && y <= 0 && x <= 1 && y >= x/2-0.5)) {
+    if ((x <= 0 && y <= 0 && (r/2)**2 - x**2 - y**2 >= 0) || (x <= 0 && y >= 0 && x >= -r/2 && y <= r) || (x >= 0 && y <= 0 && x <= r && y >= x/2-r/2)) {
         res = true;
     }
     return res;
@@ -174,10 +174,10 @@ canvas.onclick = function (evt) {
         var rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
         evt = evt || window.event;
         grid.need_cross = false;
-        let x_coords = (x - grid.size_x/2) / grid.size_x*grid.scale/grid.r, y_coords= -(y - grid.size_y/2) / grid.size_y*grid.scale/grid.r
+        let x_coords = (x - grid.size_x/2) / grid.size_x*grid.scale, y_coords= -(y - grid.size_y/2) / grid.size_y*grid.scale
         document.getElementById("x_coords").value = x_coords;
         document.getElementById("y_coords").value = y_coords;
-        grid.point_coords = [x, y, inPrimitive(x_coords, y_coords)];
+        grid.point_coords = [x, y, inPrimitive(x_coords, y_coords, grid.r)];
         grid.draw(0, 0);
     }
 }
