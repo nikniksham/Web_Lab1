@@ -17,7 +17,7 @@ body {
 /*внешний вид ячеек*/
 .grid > * {
     /*фоновый цвет*/
-    background-color: #9b9b9b;
+    background-color: #b2b2b2;
     /*скругление углов*/
     border-radius: 5px;
 
@@ -108,7 +108,7 @@ table {
 }
 
 td {
-    border: 1px solid #333;
+    border: 2px solid #000000;
 }
 
 thead, tfoot {
@@ -135,4 +135,5 @@ thead, tfoot {
     overflow: hidden;
     width: 100%;
     height: 20px;
+    padding: 3px 3px 3px 3px;
 }
