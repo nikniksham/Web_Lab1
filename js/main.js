@@ -109,18 +109,22 @@ class Grid {
         // Горизонтальная
         let c, x, y;
         for (let i = parseInt(-this.scale + 0.5); i < this.scale; i++) {
-            if (i == 0) { continue; }
+            if (i == 0) {
+                continue;
+            }
             c = this.trans_coords(this.size_x / this.scale * i / 2, 0);
             x = c[0];
             y = c[1];
-            ctx.fillText(i / 2, x - String(i / 2).length*5, y - this.raz - 5);
+            ctx.fillText(i / 2, x - String(i / 2).length * 5, y - this.raz - 5);
             ctx.moveTo(x, y - this.raz);
             ctx.lineTo(x, y + this.raz);
         }
 
         // Вертикальная
         for (let i = parseInt(-this.scale + 0.5); i < this.scale; i++) {
-            if (i == 0) { continue }
+            if (i == 0) {
+                continue
+            }
             c = this.trans_coords(0, this.size_y / this.scale * i / 2);
             x = c[0];
             y = c[1];
@@ -157,7 +161,7 @@ class Grid {
 function inPrimitive(x, y, r) {
     let res = false;
     // console.log(x, y);
-    if ((x <= 0 && y <= 0 && (r/2)**2 - x**2 - y**2 >= 0) || (x <= 0 && y >= 0 && x >= -r/2 && y <= r) || (x >= 0 && y <= 0 && x <= r && y >= x/2-r/2)) {
+    if ((x <= 0 && y <= 0 && (r / 2) ** 2 - x ** 2 - y ** 2 >= 0) || (x <= 0 && y >= 0 && x >= -r / 2 && y <= r) || (x >= 0 && y <= 0 && x <= r && y >= x / 2 - r / 2)) {
         res = true;
     }
     return res;
@@ -174,7 +178,8 @@ canvas.onclick = function (evt) {
         var rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
         evt = evt || window.event;
         grid.need_cross = false;
-        let x_coords = (x - grid.size_x/2) / grid.size_x*grid.scale, y_coords= -(y - grid.size_y/2) / grid.size_y*grid.scale
+        let x_coords = (x - grid.size_x / 2) / grid.size_x * grid.scale,
+            y_coords = -(y - grid.size_y / 2) / grid.size_y * grid.scale
         document.getElementById("x_coords").value = x_coords;
         document.getElementById("y_coords").value = y_coords;
         grid.point_coords = [x, y, inPrimitive(x_coords, y_coords, grid.r)];
@@ -199,6 +204,49 @@ document.querySelector("select").addEventListener('change', function (e) {
     grid.draw(-10, -10);
 })
 
+function change_input_field(elem, min_value, max_value) {
+    // console.log('qqqq', elem.value)
+    elem.value = elem.value.replace(/[^(\.|\d|\-)]/g, '');
+    // console.log("wwww", elem.value)
+    if (elem.value.length>0) {
+        if (!/\-?(\d+[\.]\d+|^\d+)/g.test(elem.value) || elem.value.match(/\./g) != null && elem.value.match(/\./g).length > 1 ||
+            elem.value.match(/\-/g) != null && elem.value.match(/\-/g).length >= 1 || /^\-?(0{2,}|0+\d+)/g.test(elem.value)) {
+            // console.log("1", elem.value)
+            if (/^\-?(0{2,}|0+\d+)/g.test(elem.value)) {
+                elem.value = parseFloat(elem.value);
+            } else if (elem.value[0] === ".") {
+                // console.log("2")
+                elem.value = "0" + elem.value;
+            } else if (elem.value.length > 1 && elem.value[1] === "." && elem.value[0] === "-") {
+                // console.log("3")
+                elem.value = elem.value.replace("-", "");
+                elem.value = "-0" + elem.value;
+            } else if (elem.value.match(/\./g) != null && elem.value.match(/\./g).length > 1) {
+                // console.log("4")
+                let loc = elem.value.split(".");
+                elem.value = loc[0] + ".";
+                delete loc[0];
+                elem.value += loc.join("");
+            } else if (elem.value.match(/\-/g) != null) {
+                // console.log("5", elem.value)
+                if (elem.value[0] !== "-") {
+                    // console.log(elem.value, "!!!!!")
+                    elem.value = elem.value.replace(/\-/g, "");
+                } else if (elem.value.match(/\-/g).length > 1) {
+                    // console.log(elem.value, "1_?????")
+                    elem.value = "-" + elem.value.replace(/\-/g, "");
+                    // console.log(elem.value, "2_?????")
+                }
+            }
+        }
+        let num = parseFloat(elem.value);
+        if (num > max_value) {
+            elem.value = max_value;
+        } else if (num < min_value) {
+            elem.value = min_value;
+        }
+    }
+}
 
 let grid = new Grid(canvas.width, canvas.height, 3); // r - размер фигурки
 grid.draw(-10, -10);

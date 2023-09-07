@@ -29,12 +29,12 @@
 
                 <div class="custom">
                     <label for="x_coords">X координата:</label>
-                    <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input"/>
+                    <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input" oninput="change_input_field(this, -3, 5)"/>
                 </div>
 
                 <div class="custom">
                     <label for="y_coords">Y координата:</label>
-                    <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input"/>
+                    <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input" oninput="change_input_field(this, -5, 3)"/>
                 </div>
 
                 <button class="btn" onclick="">Есть пробитие?</button>
