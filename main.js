@@ -276,7 +276,7 @@ function request_to_php() {
         alert("Поле Y должно быть заполнено")
     } else {
         let res = grid.trans_canvas_to_coords(grid.point_coords[0], grid.point_coords[1]);
-        fetch("../php/hitHandler.php?x=" + res[0] + "&y=" + res[1] + "&r=" + grid.r, {
+        fetch("./php/hitHandler.php?x=" + res[0] + "&y=" + res[1] + "&r=" + grid.r, {
             method: "POST",
             headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
         }).then(response => response.text()).then(function (serverAnswer) {
@@ -308,6 +308,10 @@ document.querySelector("select").addEventListener('change', function (e) {
     grid.point_coords[2] = 2;
     grid.draw();
 })
+
+if (localStorage.getItem("data") == null) {
+    localStorage.setItem("data", "");
+}
 
 document.getElementById("suda").innerHTML = localStorage.getItem("data");
 let grid = new Grid(canvas.width, canvas.height, 3); // r - размер фигурки
