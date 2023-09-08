@@ -1,5 +1,4 @@
 let canvas = document.getElementById('drawLine');
-// let canvas = $('drawLine');
 console.log(canvas);
 let ctx = canvas.getContext('2d');
 ctx.font = "24px roboto";
@@ -13,38 +12,42 @@ class Grid {
         this.r = r;
         this.raz = this.size_x / 60;
         this.need_cross = true;
-        this.point_coords = [-this.raz, -this.raz, false];
+        this.point_coords = [-this.raz, -this.raz, 2];
         this.scale = 7; // кол-во ступеней в сетке
         this.ssx = this.size_x / this.scale;
         this.ssy = this.size_y / this.scale;
         this.cursor_in_good_zone = false;
+        this.mouse_on_canvas = false;
+        this.mouse_coords = [-10, -10];
     }
 
-    draw(x, y, mouse_on_canvas) {
+    draw() {
         this.stroke_panel();
         this.draw_primitives();
         this.draw_grid();
-        if (this.need_cross) {
-            if (mouse_on_canvas) {
-                this.drawCross(x, y);
-            }
-        } else {
-            this.drawPoint()
+        if (this.mouse_on_canvas) {
+            this.drawCross();
         }
+        this.drawPoint()
     }
 
     drawPoint() {
         ctx.beginPath()
-        ctx.fillStyle = "#f00";
-        if (this.point_coords[2]) {
+        ctx.fillStyle = "#ffe300";
+        if (this.point_coords[2] === 0) {
+            ctx.fillStyle = "#f00";
+        } else if (this.point_coords[2] === 1) {
             ctx.fillStyle = "#0f0";
         }
-        ctx.arc(this.point_coords[0], this.point_coords[1], this.raz / 2, 0, Math.PI * 2, true);
+
+        ctx.arc(this.point_coords[0], this.point_coords[1], this.raz / 1.5, 0, Math.PI * 2, true);
         ctx.fill();
+        ctx.stroke();
         ctx.fillStyle = "#000";
     }
 
-    drawCross(x, y) {
+    drawCross() {
+        let x = this.mouse_coords[0], y = this.mouse_coords[1];
         ctx.beginPath()
         ctx.strokeStyle = "#ff0000";
         ctx.beginPath()
@@ -155,11 +158,6 @@ class Grid {
         ctx.stroke();
     }
 
-    reset_cross() {
-        this.need_cross = true;
-        this.point_coords = [-this.raz, -this.raz, false]
-    }
-
     trans_coords(x, y) {
         return [this.size_x / 2 + x, this.size_y / 2 + y];
     }
@@ -187,10 +185,9 @@ class Grid {
 }
 
 function inPrimitive(x, y, r) {
-    let res = false;
-    // console.log(x, y);
+    let res = 0;
     if ((x <= 0 && y <= 0 && (r / 2) ** 2 - x ** 2 - y ** 2 >= 0) || (x <= 0 && y >= 0 && x >= -r / 2 && y <= r) || (x >= 0 && y <= 0 && x <= r && y >= x / 2 - r / 2)) {
-        res = true;
+        res = 1;
     }
     return res;
 }
@@ -198,11 +195,13 @@ function inPrimitive(x, y, r) {
 canvas.onmousemove = function (evt) {
     evt = evt || window.event;
     let rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
-    grid.draw(x, y, true);
+    grid.mouse_on_canvas = true;
+    grid.mouse_coords = [x, y];
+    grid.draw();
 }
 
 canvas.onclick = function (evt) {
-    if (grid.need_cross && grid.cursor_in_good_zone) {
+    if (grid.cursor_in_good_zone) {
         let rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
         evt = evt || window.event;
         grid.need_cross = false;
@@ -211,19 +210,13 @@ canvas.onclick = function (evt) {
         document.getElementById("x_coords").value = x_coords;
         document.getElementById("y_coords").value = y_coords;
         res = grid.trans_coords_to_canvas(x_coords, y_coords);
-        let x_on_can = res[0], y_on_can = res[1];
-        // console.log([x_coords, x_on_can, x], [y_coords, y_on_can, y]);
-        grid.point_coords = [x_on_can, y_on_can, inPrimitive(x_coords, y_coords, grid.r)];
-        grid.draw(0, 0, true);
+        // grid.point_coords = [res[0], res[1], inPrimitive(x_coords, y_coords, grid.r)];
+        grid.point_coords = [res[0], res[1], 2];
+        grid.draw();
     }
 }
 
-function reset() {
-    grid.reset_cross();
-    grid.draw(-10, -10, false);
-}
-
-function change_input_field(elem, min_value, max_value) {
+function change_input_field(elem, min_value, max_value, ty) {
     // console.log('qqqq', elem.value)
     elem.value = elem.value.replace(/[^(\.|\d|\-)]/g, '');
     // console.log("wwww", elem.value)
@@ -259,6 +252,9 @@ function change_input_field(elem, min_value, max_value) {
             }
         }
         elem.value = check_num_ogr(min_value, max_value, elem.value);
+        let coords = ty === 0 ? grid.trans_coords_to_canvas(elem.value, 0) : grid.trans_coords_to_canvas(0, elem.value);
+        grid.point_coords[ty] = coords[ty];
+        grid.draw();
     }
 }
 
@@ -271,17 +267,48 @@ function check_num_ogr(min_value, max_value, num) {
     return num;
 }
 
+function request_to_php() {
+    let x_value = document.getElementById("x_coords").value;
+    let y_value = document.getElementById("y_coords").value;
+    if (x_value.length === 0 || x_value === "-") {
+        alert("Поле X должно быть заполнено")
+    } else if (y_value.length === 0 || y_value === "-") {
+        alert("Поле Y должно быть заполнено")
+    } else {
+        let res = grid.trans_canvas_to_coords(grid.point_coords[0], grid.point_coords[1]);
+        fetch("../php/hitHandler.php?x=" + res[0] + "&y=" + res[1] + "&r=" + grid.r, {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
+        }).then(response => response.text()).then(function (serverAnswer) {
+            localStorage.setItem("data", serverAnswer + localStorage.getItem("data"));
+            document.getElementById("suda").innerHTML = localStorage.getItem("data");
+            grid.point_coords[2] = (serverAnswer.indexOf("Попал") === -1) ? 0 : 1;
+            grid.draw();
+            // console.log(serverAnswer.indexOf("Попал"));
+        }).catch(err => console.log("Эй! Вы играете неправильно, причина ошибки --> " + err.status));
+    }
+}
+
+function clear_table() {
+    localStorage.setItem("data", "");
+    document.getElementById("suda").innerHTML = "";
+    // grid.point_coords[2] = 2;
+    // grid.draw();
+}
+
 canvas.onmouseleave = function (evt) {
     evt = evt || window.event;
-    grid.draw(-10, -10, false);
+    grid.mouse_on_canvas = false;
+    grid.mouse_coords = [-10, -10];
+    grid.draw();
 }
 
 document.querySelector("select").addEventListener('change', function (e) {
-    // console.log("Changed to: " + e.target.value)
     grid.r = parseFloat(e.target.value);
-    grid.reset_cross();
-    grid.draw(-10, -10, false);
+    grid.point_coords[2] = 2;
+    grid.draw();
 })
 
+document.getElementById("suda").innerHTML = localStorage.getItem("data");
 let grid = new Grid(canvas.width, canvas.height, 3); // r - размер фигурки
-grid.draw(-10, -10, false);
+grid.draw();

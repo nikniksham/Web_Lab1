@@ -6,6 +6,16 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+
+<header>
+    <div class="header">
+        <h1>Welcome to the web-club</h1>
+        <p>Изготовитель: Шамков Николай Николаевич<br>
+        Группа: P3207<br>
+        Вариант: 1720</p>
+    </div>
+</header>
+
 <div class="wrapper">
     <div class="grid">
         <div>
@@ -13,9 +23,12 @@
             <!--        <button class="base-button" type="button" onclick="reset()">Тык тык</button>-->
         </div>
         <div class="container">
-            <p>Тут типо надо задавать координаты, где будет стоять точка, такая вот темка, ну типо можно ещё и задать
-                размер для фигурки, куда потом надо будет ставить точку, воот</p>
-            <form action="" method="get" class="my-form">
+            <div class="pad_bot">
+                <img src="img/sad.png" alt="как же тонко" class="tonko">
+                <p>Тут можно задавать координаты прямо мышкой, тыкая по канвасу. Жаль, что далеко не все поймут в чём же
+                    дело и как сложен js))) Действительно тонко))) Не так уж много и образованных в наше время, кто
+                    знает, почему это так интересно и необычно)))
+                </p>
                 <div class="custom">
                     <label for="size_r">Параметр R:</label>
                     <select name="size_r" id="size_r" class="my-select">
@@ -29,17 +42,17 @@
 
                 <div class="custom">
                     <label for="x_coords">X координата:</label>
-                    <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input" oninput="change_input_field(this, -3, 5)"/>
+                    <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input" oninput="change_input_field(this, -3, 5, 0)"/>
                 </div>
 
                 <div class="custom">
                     <label for="y_coords">Y координата:</label>
-                    <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input" oninput="change_input_field(this, -5, 3)"/>
+                    <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input" oninput="change_input_field(this, -5, 3, 1)"/>
                 </div>
 
-                <button class="btn" onclick="">Есть пробитие?</button>
-            </form>
-            <button class="btn" onclick="reset()">Задать координаты на карте</button>
+                <button class="btn" onclick="request_to_php()">Есть пробитие?</button>
+            </div>
+            <button class="btn" onclick="clear_table()">Очистить табличку</button>
         </div>
         <div class="container">
             <div class="table">
@@ -49,25 +62,13 @@
                         <th colspan="1" style="width: 10%">X</th>
                         <th colspan="1" style="width: 10%">Y</th>
                         <th colspan="1" style="width: 5%">R</th>
-                        <th colspan="1" style="width: 25%">Результат</th>
-                        <th colspan="1" style="width: 30%">Выполнен в</th>
-                        <th colspan="1" style="width: 30%">Время выполнения</th>
+                        <th colspan="1" style="width: 15%">Результат</th>
+                        <th colspan="1" style="width: 35%">Выполнен в</th>
+                        <th colspan="1" style="width: 35%">Время выполнения</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <?php
+                    <tbody id="suda">
 
-                    for ($i = 1; $i <= 100; $i++) {
-                        echo '<tr>';
-                        echo '<td><p class="crop">3.125123251251232525332322533232</p></td>';
-                        echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
-                        echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
-                        echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
-                        echo '<td><p class="crop">3.125123125123252533232252533232</p></td>';
-                        echo '<td><p class="crop">3.125123125123252533232252533232</p></td>';
-                        echo '</tr>';
-                    }
-                    ?>
                     </tbody>
                 </table>
             </div>

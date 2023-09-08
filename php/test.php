@@ -1,10 +1,13 @@
 <?php
 
-for ($i = 1; $i <= 20; $i++) {
-    echo '<tr>\n';
-    echo '<td>The table body</td>';
-    echo '<td>with two columns</td>';
-    echo '<td>with two columns</td>';
+for ($i = 1; $i <= 100; $i++) {
+    echo '<tr>';
+    echo '<td><p class="crop">3.125123251251232525332322533232</p></td>';
+    echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
+    echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
+    echo '<td><p class="crop">3.125123212512325253323252533232</p></td>';
+    echo '<td><p class="crop">3.125123125123252533232252533232</p></td>';
+    echo '<td><p class="crop">3.125123125123252533232252533232</p></td>';
     echo '</tr>';
 }
 ?>
