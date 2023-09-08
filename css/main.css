@@ -96,7 +96,7 @@ canvas {
 
 .custom label {
     white-space: nowrap;
-    padding-right: 3px;
+    padding-right: 1%;
 }
 
 div.pad_bot {
@@ -151,6 +151,22 @@ header {
     border-radius: 5px;
 }
 
-div.header {
+.header {
     padding: 1px 1% 1% 1%;
+}
+
+.hea-2 .header {
+    padding: 0 0 0 1%;
+}
+
+p.sad:first-line {
+    font-weight: bold;
+}
+
+h1 {
+    color: red;
+}
+
+.main_header_h1 {
+    color: black;
 }
