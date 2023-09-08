@@ -4,6 +4,7 @@ console.log(canvas);
 let ctx = canvas.getContext('2d');
 ctx.font = "24px roboto";
 ctx.lineWidth = "2";
+let min_x = -3, max_x = 5, min_y = -5, max_y = 3;
 
 class Grid {
     constructor(size_x, size_y, r) {
@@ -14,14 +15,19 @@ class Grid {
         this.need_cross = true;
         this.point_coords = [-this.raz, -this.raz, false];
         this.scale = 7; // кол-во ступеней в сетке
+        this.ssx = this.size_x / this.scale;
+        this.ssy = this.size_y / this.scale;
+        this.cursor_in_good_zone = false;
     }
 
-    draw(x, y) {
+    draw(x, y, mouse_on_canvas) {
         this.stroke_panel();
         this.draw_primitives();
         this.draw_grid();
         if (this.need_cross) {
-            this.drawCross(x, y);
+            if (mouse_on_canvas) {
+                this.drawCross(x, y);
+            }
         } else {
             this.drawPoint()
         }
@@ -42,10 +48,24 @@ class Grid {
         ctx.beginPath()
         ctx.strokeStyle = "#ff0000";
         ctx.beginPath()
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, this.size_y);
-        ctx.moveTo(0, y);
-        ctx.lineTo(this.size_x, y);
+
+        let mini = this.trans_coords_to_canvas(min_x, min_y), maxi = this.trans_coords_to_canvas(max_x, max_y);
+        ctx.moveTo(mini[0], mini[1]);
+        ctx.lineTo(mini[0], maxi[1]);
+        ctx.lineTo(maxi[0], maxi[1]);
+        ctx.lineTo(maxi[0], mini[1]);
+        ctx.lineTo(mini[0], mini[1]);
+
+        if (x > mini[0] && x < maxi[0] && y > maxi[1] && y < mini[1]) {
+            ctx.moveTo(Math.min(Math.max(x, mini[0]), maxi[0]), mini[1]);
+            ctx.lineTo(Math.min(Math.max(x, mini[0]), maxi[0]), maxi[1]);
+            ctx.moveTo(mini[0], Math.min(Math.max(y, maxi[1]), mini[1]));
+            ctx.lineTo(maxi[0], Math.min(Math.max(y, maxi[1]), mini[1]));
+            this.cursor_in_good_zone = true;
+        } else {
+            this.cursor_in_good_zone = false;
+        }
+
         ctx.stroke();
         ctx.strokeStyle = "#000000";
     }
@@ -156,6 +176,14 @@ class Grid {
         ctx.fillStyle = "#000000";
         ctx.stroke();
     }
+
+    trans_coords_to_canvas(x_coords, y_coords) {
+        return [x_coords * this.ssx + this.size_x / 2, grid.size_y - (y_coords * this.ssy + grid.size_y / 2)];
+    }
+
+    trans_canvas_to_coords(x_canvas, y_canvas) {
+        return [(x_canvas - this.size_x / 2) / this.ssx, -(y_canvas - this.size_y / 2) / this.ssy]
+    }
 }
 
 function inPrimitive(x, y, r) {
@@ -169,40 +197,31 @@ function inPrimitive(x, y, r) {
 
 canvas.onmousemove = function (evt) {
     evt = evt || window.event;
-    var rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
-    grid.draw(x, y);
+    let rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
+    grid.draw(x, y, true);
 }
 
 canvas.onclick = function (evt) {
-    if (grid.need_cross) {
-        var rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
+    if (grid.need_cross && grid.cursor_in_good_zone) {
+        let rect = this.getBoundingClientRect(), x = evt.clientX - rect.left, y = evt.clientY - rect.top;
         evt = evt || window.event;
         grid.need_cross = false;
-        let x_coords = (x - grid.size_x / 2) / grid.size_x * grid.scale,
-            y_coords = -(y - grid.size_y / 2) / grid.size_y * grid.scale
+        let res = grid.trans_canvas_to_coords(x, y);
+        let x_coords = check_num_ogr(min_x, max_x, res[0]), y_coords = check_num_ogr(min_y, max_y, res[1])
         document.getElementById("x_coords").value = x_coords;
         document.getElementById("y_coords").value = y_coords;
-        grid.point_coords = [x, y, inPrimitive(x_coords, y_coords, grid.r)];
-        grid.draw(0, 0);
+        res = grid.trans_coords_to_canvas(x_coords, y_coords);
+        let x_on_can = res[0], y_on_can = res[1];
+        // console.log([x_coords, x_on_can, x], [y_coords, y_on_can, y]);
+        grid.point_coords = [x_on_can, y_on_can, inPrimitive(x_coords, y_coords, grid.r)];
+        grid.draw(0, 0, true);
     }
-}
-
-canvas.onmouseleave = function (evt) {
-    evt = evt || window.event;
-    grid.draw(-10, -10);
 }
 
 function reset() {
     grid.reset_cross();
-    grid.draw(-10, -10);
+    grid.draw(-10, -10, false);
 }
-
-document.querySelector("select").addEventListener('change', function (e) {
-    // console.log("Changed to: " + e.target.value)
-    grid.r = parseFloat(e.target.value);
-    grid.reset_cross();
-    grid.draw(-10, -10);
-})
 
 function change_input_field(elem, min_value, max_value) {
     // console.log('qqqq', elem.value)
@@ -239,14 +258,30 @@ function change_input_field(elem, min_value, max_value) {
                 }
             }
         }
-        let num = parseFloat(elem.value);
-        if (num > max_value) {
-            elem.value = max_value;
-        } else if (num < min_value) {
-            elem.value = min_value;
-        }
+        elem.value = check_num_ogr(min_value, max_value, elem.value);
     }
 }
 
+function check_num_ogr(min_value, max_value, num) {
+    if (num > max_value) {
+        num = max_value;
+    } else if (num < min_value) {
+        num = min_value;
+    }
+    return num;
+}
+
+canvas.onmouseleave = function (evt) {
+    evt = evt || window.event;
+    grid.draw(-10, -10, false);
+}
+
+document.querySelector("select").addEventListener('change', function (e) {
+    // console.log("Changed to: " + e.target.value)
+    grid.r = parseFloat(e.target.value);
+    grid.reset_cross();
+    grid.draw(-10, -10, false);
+})
+
 let grid = new Grid(canvas.width, canvas.height, 3); // r - размер фигурки
-grid.draw(-10, -10);
+grid.draw(-10, -10, false);
