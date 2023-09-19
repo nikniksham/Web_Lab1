@@ -219,7 +219,7 @@ canvas.onclick = function (evt) {
 
 function change_input_field(elem, min_value, max_value, ty) {
     // console.log('qqqq', elem.value)
-    elem.value = elem.value.replace(/[^(\.|\d|\-)]/g, '');
+    elem.value = elem.value.replace(/[^(\.|\d|\-)]/g, '').slice(0, 15);
     // console.log("wwww", elem.value)
     if (elem.value.length>0) {
         if (!/\-?(\d+[\.]\d+|^\d+)/g.test(elem.value) || elem.value.match(/\./g) != null && elem.value.match(/\./g).length > 1 ||
@@ -273,6 +273,8 @@ function check_num_ogr(min_value, max_value, num) {
 function request_to_php() {
     let x_value = document.getElementById("x_coords").value;
     let y_value = document.getElementById("y_coords").value;
+    // console.log(x_value, y_value)
+    // let y_value = document.getElementById("y_coords").value.slice(15);
     if (x_value.length === 0 || x_value === "-") {
         document.getElementById("form_error").innerHTML = "Поле X должно быть заполнено";
     } else if (y_value.length === 0 || y_value === "-") {
@@ -284,8 +286,9 @@ function request_to_php() {
     } else {
         let res = grid.trans_canvas_to_coords(grid.point_coords[0], grid.point_coords[1]);
         let formData = new FormData();
-        formData.append("x", res[0]);
-        formData.append("y", res[1]);
+        // console.log(parseFloat(String(res[0]).slice(0, 8)))
+        formData.append("x", parseFloat(String(res[0]).slice(0, 8)));
+        formData.append("y", parseFloat(String(res[1]).slice(0, 8)));
         formData.append("r", grid.r);
         // console.log(formData)
         fetch("./php/hitHandler.php", {
