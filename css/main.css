@@ -170,3 +170,8 @@ h1 {
 .main_header_h1 {
     color: black;
 }
+
+#form_error {
+    margin-top: 3px;
+    margin-bottom: -5px;
+}

@@ -54,10 +54,10 @@
                     <label for="y_coords">Y координата:</label>
                     <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input" oninput="change_input_field(this, -4.99999999, 2.99999999, 1)" placeholder="Y (-5; 3)"/>
                 </div>
-
                 <button class="btn" onclick="request_to_php()">Есть пробитие?</button>
+                <button class="btn" onclick="clear_table()">Очистить табличку</button>
+                <h5 id="form_error"></h5>
             </div>
-            <button class="btn" onclick="clear_table()">Очистить табличку</button>
         </div>
         <div class="container">
             <div class="table">

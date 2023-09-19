@@ -213,6 +213,7 @@ canvas.onclick = function (evt) {
         // grid.point_coords = [res[0], res[1], inPrimitive(x_coords, y_coords, grid.r)];
         grid.point_coords = [res[0], res[1], 2];
         grid.draw();
+        document.getElementById("form_error").innerHTML = "";
     }
 }
 
@@ -251,11 +252,12 @@ function change_input_field(elem, min_value, max_value, ty) {
                 }
             }
         }
-        elem.value = check_num_ogr(min_value, max_value, elem.value);
+        // elem.value = check_num_ogr(min_value, max_value, elem.value);
         let coords = ty === 0 ? grid.trans_coords_to_canvas(elem.value, 0) : grid.trans_coords_to_canvas(0, elem.value);
         grid.point_coords[ty] = coords[ty];
         grid.point_coords[2] = 2;
         grid.draw();
+        document.getElementById("form_error").innerHTML = "";
     }
 }
 
@@ -272,9 +274,13 @@ function request_to_php() {
     let x_value = document.getElementById("x_coords").value;
     let y_value = document.getElementById("y_coords").value;
     if (x_value.length === 0 || x_value === "-") {
-        alert("Поле X должно быть заполнено")
+        document.getElementById("form_error").innerHTML = "Поле X должно быть заполнено";
     } else if (y_value.length === 0 || y_value === "-") {
-        alert("Поле Y должно быть заполнено")
+        document.getElementById("form_error").innerHTML = "Поле Y должно быть заполнено";
+    } else if (x_value > 5 || x_value < -3) {
+        document.getElementById("form_error").innerHTML = "Значение поля X должно быть в (-3; 5)";
+    } else if (y_value > 3 || y_value < -5) {
+        document.getElementById("form_error").innerHTML = "Значение поля Y должно быть в (-5; 3)";
     } else {
         let res = grid.trans_canvas_to_coords(grid.point_coords[0], grid.point_coords[1]);
         let formData = new FormData();
