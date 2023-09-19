@@ -251,7 +251,7 @@ function change_input_field(elem, min_value, max_value, ty) {
                 }
             }
         }
-        elem.value = check_num_ogr(min_value, max_value, parseFloat(elem.value).toFixed(8));
+        elem.value = check_num_ogr(min_value, max_value, elem.value);
         let coords = ty === 0 ? grid.trans_coords_to_canvas(elem.value, 0) : grid.trans_coords_to_canvas(0, elem.value);
         grid.point_coords[ty] = coords[ty];
         grid.point_coords[2] = 2;
