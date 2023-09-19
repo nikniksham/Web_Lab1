@@ -3,7 +3,7 @@ console.log(canvas);
 let ctx = canvas.getContext('2d');
 ctx.font = "24px roboto";
 ctx.lineWidth = "2";
-let min_x = -3, max_x = 5, min_y = -5, max_y = 3;
+let min_x = -2.99999999, max_x = 4.99999999, min_y = -4.99999999, max_y = 2.99999999;
 
 class Grid {
     constructor(size_x, size_y, r) {
@@ -206,7 +206,7 @@ canvas.onclick = function (evt) {
         evt = evt || window.event;
         grid.need_cross = false;
         let res = grid.trans_canvas_to_coords(x, y);
-        let x_coords = check_num_ogr(min_x, max_x, res[0]), y_coords = check_num_ogr(min_y, max_y, res[1])
+        let x_coords = check_num_ogr(min_x, max_x, res[0]).toFixed(8), y_coords = check_num_ogr(min_y, max_y, res[1]).toFixed(8)
         document.getElementById("x_coords").value = x_coords;
         document.getElementById("y_coords").value = y_coords;
         res = grid.trans_coords_to_canvas(x_coords, y_coords);
@@ -251,7 +251,7 @@ function change_input_field(elem, min_value, max_value, ty) {
                 }
             }
         }
-        elem.value = check_num_ogr(min_value, max_value, elem.value);
+        elem.value = check_num_ogr(min_value, max_value, parseFloat(elem.value).toFixed(8));
         let coords = ty === 0 ? grid.trans_coords_to_canvas(elem.value, 0) : grid.trans_coords_to_canvas(0, elem.value);
         grid.point_coords[ty] = coords[ty];
         grid.point_coords[2] = 2;
@@ -281,7 +281,7 @@ function request_to_php() {
         formData.append("x", res[0]);
         formData.append("y", res[1]);
         formData.append("r", grid.r);
-        console.log(formData)
+        // console.log(formData)
         fetch("./php/hitHandler.php", {
             method: "POST",
             body: formData
