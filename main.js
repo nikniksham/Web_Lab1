@@ -277,9 +277,14 @@ function request_to_php() {
         alert("Поле Y должно быть заполнено")
     } else {
         let res = grid.trans_canvas_to_coords(grid.point_coords[0], grid.point_coords[1]);
-        fetch("./php/hitHandler.php?x=" + res[0] + "&y=" + res[1] + "&r=" + grid.r, {
+        let formData = new FormData();
+        formData.append("x", res[0]);
+        formData.append("y", res[1]);
+        formData.append("r", grid.r);
+        console.log(formData)
+        fetch("./php/hitHandler.php", {
             method: "POST",
-            headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
+            body: formData
         }).then(response => response.text()).then(function (serverAnswer) {
             localStorage.setItem("data", serverAnswer + localStorage.getItem("data"));
             document.getElementById("suda").innerHTML = localStorage.getItem("data");

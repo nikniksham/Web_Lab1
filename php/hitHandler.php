@@ -2,9 +2,9 @@
 $startTime = microtime(true);
 
 try {
-    $x = $_GET["x"];
-    $y = $_GET["y"];
-    $r = $_GET["r"];
+    $x = $_POST["x"];
+    $y = $_POST["y"];
+    $r = $_POST["r"];
     $result = "Скосил";
     preg_match('/\-?\d+\.?\d{0,}/', $x, $matches);
     if (count($matches) == 1 && $matches[0] == $x) {
