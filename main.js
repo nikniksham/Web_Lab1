@@ -277,9 +277,9 @@ function request_to_php() {
         document.getElementById("form_error").innerHTML = "Поле X должно быть заполнено";
     } else if (y_value.length === 0 || y_value === "-") {
         document.getElementById("form_error").innerHTML = "Поле Y должно быть заполнено";
-    } else if (x_value > 5 || x_value < -3) {
+    } else if (x_value >= 5 || x_value <= -3) {
         document.getElementById("form_error").innerHTML = "Значение поля X должно быть в (-3; 5)";
-    } else if (y_value > 3 || y_value < -5) {
+    } else if (y_value >= 3 || y_value <= -5) {
         document.getElementById("form_error").innerHTML = "Значение поля Y должно быть в (-5; 3)";
     } else {
         let res = grid.trans_canvas_to_coords(grid.point_coords[0], grid.point_coords[1]);
